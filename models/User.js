@@ -18,7 +18,8 @@ const UserSchema = new Schema({
     watchList: [{
         movieId: {
             type: Types.ObjectId,
-            required: true
+            required: true,
+            unique: true,
         },
         isWatched: {
             type: Boolean,

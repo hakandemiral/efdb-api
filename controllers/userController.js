@@ -31,6 +31,7 @@ const userController = {
 
                                 res.status(200).json({
                                     token,
+                                    isAdmin: user.isAdmin,
                                     expire: 1
                                 })
                             } else {
@@ -56,7 +57,7 @@ const userController = {
                     user.save()
                         .then((data) => {
                             const payload = {
-                                userId: data._id
+                                userId: data._id,
                             };
 
                             const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
@@ -78,6 +79,46 @@ const userController = {
                 }
             })
         }
+    },
+    addMovieToWatchList(req, res) {
+        const { movieId } = req.body;
+        const { userId } = req.decode;
+
+        User.findById(userId)
+        .then((user) => {
+            user.watchList.push({
+                movieId,
+            });
+            user.save();
+            console.log("istek geldi")
+            res.status(201).send("Added");
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500);
+        })
+    },
+    removeMovieFromWatchList(req, res){
+        const { movieId } = req.body;
+        const { userId } = req.decode;
+
+        User.findById(userId)
+        .then((user) => {
+            user.watchlist = user.watchList.filter(m => m.movieId != movieId);
+            console.log(user.watchList);
+            user.save()
+            .then(() => {
+                console.log("user saved")
+                res.status(200);
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500)
+            })
+        })
+        .catch(err => {
+            res.status(500);
+        })
     }
 };
 

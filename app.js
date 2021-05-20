@@ -15,7 +15,7 @@ const app = express();
 db();
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: '*',
     optionsSuccessStatus: 200,
 }));
 app.use(logger('dev'));
