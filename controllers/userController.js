@@ -81,16 +81,17 @@ const userController = {
         }
     },
     addMovieToWatchList(req, res) {
-        const { movieId } = req.body;
+        const { movieId, movieTitle } = req.body;
         const { userId } = req.decode;
 
         User.findById(userId)
         .then((user) => {
+            console.log("user founded!")
             user.watchList.push({
                 movieId,
+                movieTitle,
             });
             user.save();
-            console.log("istek geldi")
             res.status(201).send("Added");
         })
         .catch(err => {
@@ -104,12 +105,10 @@ const userController = {
 
         User.findById(userId)
         .then((user) => {
-            user.watchlist = user.watchList.filter(m => m.movieId != movieId);
-            console.log(user.watchList);
+            user.watchList = user.watchList.filter(m => m.movieId.toString() != movieId.toString());
             user.save()
             .then(() => {
-                console.log("user saved")
-                res.status(200);
+                res.status(200).send('OK')
             })
             .catch((err) => {
                 console.log(err);
@@ -118,6 +117,33 @@ const userController = {
         })
         .catch(err => {
             res.status(500);
+        })
+    },
+    getUserWatchList(req, res) {
+        const { userId } = req.decode;
+
+        User.findById(userId)
+        .then((user) => {
+            res.status(200).json(user.watchList);
+        })
+    },
+    toggleIsWatchedFromWatchList(req, res) {
+        const { movieId, status } = req.body;
+        const { userId } = req.decode;
+
+        User.findById(userId)
+        .then((user) => {
+            user.watchList.map(w => {
+                if(w.movieId == movieId){
+                    w.isWatched = status;
+                }
+
+                return w;
+            })
+            user.save()
+            .then(() => {
+                res.status(200).send("OK");
+            })
         })
     }
 };

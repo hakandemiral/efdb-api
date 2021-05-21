@@ -16,6 +16,10 @@ const UserSchema = new Schema({
         required: true
     },
     watchList: [{
+        movieTitle: {
+            type: String,
+            required: true,
+        },
         movieId: {
             type: Types.ObjectId,
             required: true,
