@@ -44,7 +44,6 @@ const userController = {
     },
     create(req, res) {
         const { userName, email, password} = req.body;
-
         if(userName && email && password) {
             bcrypt.hash(password.toString(), 10, (hashErr, hash) => {
                 if(!hashErr) {
@@ -63,7 +62,6 @@ const userController = {
                             const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
                                 expiresIn: '1 day',
                             })
-                            console.log(JSON.stringify(data));
 
                             res.status(201).json({
                                 token,
@@ -71,7 +69,8 @@ const userController = {
                             })
                         })
                         .catch((err) => {
-                            res.status(501).send("Error!")
+                            res.status(501).send("User creation failed!")
+                            console.log(err);
                         });
 
                 }else {

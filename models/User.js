@@ -16,6 +16,7 @@ const UserSchema = new Schema({
         required: true
     },
     watchList: [{
+        _id: false,
         movieTitle: {
             type: String,
             required: true,
